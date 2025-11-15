@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\AttendanceRecorded;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class InvalidateAttendanceCache
@@ -32,15 +32,7 @@ class InvalidateAttendanceCache
             
             // Invalidate today's statistics cache
             $todayCacheKey = 'attendance:stats:today:' . $date;
-            Redis::del($todayCacheKey);
-            
-            // Invalidate all attendance-related caches
-            $pattern = 'attendance:stats:*';
-            $keys = Redis::keys($pattern);
-            
-            if (!empty($keys)) {
-                Redis::del($keys);
-            }
+            Cache::forget($todayCacheKey);
             
             Log::info('Attendance cache invalidated after recording', [
                 'date' => $date,
