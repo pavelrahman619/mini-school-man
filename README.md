@@ -108,3 +108,8 @@ This project was built with AI assistance. See [AI_WORKFLOW.md](AI_WORKFLOW.md) 
 - Setup Docker
 - Separate backend and frontend folders for easier maintenance
 - Add more school management features
+- Proper Redis setup
+- Micro services
+- AI related Face recognition attendance or fingerprint
+- Staff Management
+- Switch to React cause React is better
