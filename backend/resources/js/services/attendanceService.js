@@ -24,13 +24,15 @@ export const attendanceService = {
      * Get monthly attendance report
      * @param {number} month - Month (1-12)
      * @param {number} year - Year
-     * @param {string} classId - Class identifier
+     * @param {string} classId - Class identifier (optional)
      * @returns {Promise}
      */
     async getMonthlyReport(month, year, classId) {
-        const response = await api.get('/attendance/monthly-report', {
-            params: { month, year, class: classId }
-        });
+        const params = { month, year };
+        if (classId) {
+            params.class = classId;
+        }
+        const response = await api.get('/attendance/monthly-report', { params });
         return response.data;
     },
 

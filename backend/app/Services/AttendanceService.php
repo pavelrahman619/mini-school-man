@@ -9,7 +9,7 @@ use App\Events\AttendanceRecorded;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class AttendanceService
@@ -152,7 +152,7 @@ class AttendanceService
     }
 
     /**
-     * Get today's attendance statistics with Redis caching.
+     * Get today's attendance statistics with file caching.
      *
      * @return array Today's statistics
      */
@@ -160,32 +160,9 @@ class AttendanceService
     {
         $cacheKey = 'attendance:stats:today:' . now()->format('Y-m-d');
         
-        try {
-            // Try to get from Redis cache
-            $cached = Redis::get($cacheKey);
-            
-            if ($cached !== null) {
-                return json_decode($cached, true);
-            }
-        } catch (\Exception $e) {
-            Log::warning('Redis cache retrieval failed, falling back to database', [
-                'error' => $e->getMessage(),
-            ]);
-        }
-        
-        // Fallback to database
-        $statistics = $this->calculateTodayStatistics();
-        
-        try {
-            // Cache for 3600 seconds (1 hour)
-            Redis::setex($cacheKey, 3600, json_encode($statistics));
-        } catch (\Exception $e) {
-            Log::warning('Redis cache storage failed', [
-                'error' => $e->getMessage(),
-            ]);
-        }
-        
-        return $statistics;
+        return Cache::remember($cacheKey, 3600, function () {
+            return $this->calculateTodayStatistics();
+        });
     }
     
     /**
@@ -229,15 +206,7 @@ class AttendanceService
             $today = now()->format('Y-m-d');
             $cacheKey = 'attendance:stats:today:' . $today;
             
-            Redis::del($cacheKey);
-            
-            // Also invalidate class-specific caches if they exist
-            $pattern = 'attendance:stats:*';
-            $keys = Redis::keys($pattern);
-            
-            if (!empty($keys)) {
-                Redis::del($keys);
-            }
+            Cache::forget($cacheKey);
             
             Log::info('Attendance statistics cache invalidated');
         } catch (\Exception $e) {

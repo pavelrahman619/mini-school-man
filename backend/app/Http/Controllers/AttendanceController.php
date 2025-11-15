@@ -96,14 +96,14 @@ class AttendanceController extends Controller
         $validated = $request->validate([
             'month' => 'required|integer|min:1|max:12',
             'year' => 'required|integer|min:2000|max:2100',
-            'class' => 'required|string|max:50',
+            'class' => 'nullable|string|max:50',
         ]);
 
         try {
             $report = $this->attendanceService->generateMonthlyReport(
                 $validated['month'],
                 $validated['year'],
-                $validated['class']
+                $validated['class'] ?? ''
             );
 
             return response()->json([
