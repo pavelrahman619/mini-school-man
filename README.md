@@ -2,6 +2,17 @@
 
 A school attendance system built with Laravel 10 + Vue 3 + Sanctum + MySQL.
 
+## Screenshots
+
+<img width="1917" height="926" alt="image" src="https://github.com/user-attachments/assets/038a0642-d39c-4f55-b22b-36c208837676" />
+
+<img width="1915" height="927" alt="image" src="https://github.com/user-attachments/assets/67a487ff-aa16-46dd-b17b-0e6156b3efa8" />
+
+<img width="1917" height="930" alt="image" src="https://github.com/user-attachments/assets/d17b42ea-b8b0-49a9-aed7-79903e99d6ca" />
+
+<img width="1916" height="935" alt="image" src="https://github.com/user-attachments/assets/5605724d-0d51-4431-83f5-ff37d70c0ae4" />
+
+
 ## Features
 
 - Student management with photo support
