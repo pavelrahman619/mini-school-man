@@ -8,13 +8,15 @@ export const authService = {
      */
     async login(credentials) {
         const response = await api.post('/login', credentials);
-        if (response.data.token) {
-            localStorage.setItem('auth_token', response.data.token);
-            if (response.data.user) {
-                localStorage.setItem('user', JSON.stringify(response.data.user));
+        const data = response.data.data || response.data;
+        
+        if (data.token) {
+            localStorage.setItem('auth_token', data.token);
+            if (data.user) {
+                localStorage.setItem('user', JSON.stringify(data.user));
             }
         }
-        return response.data;
+        return data;
     },
 
     /**

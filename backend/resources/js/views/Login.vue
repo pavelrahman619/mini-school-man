@@ -57,10 +57,11 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
 
 const router = useRouter();
+const route = useRoute();
 const { login, loading, error } = useAuth();
 
 const email = ref('');
@@ -73,8 +74,12 @@ const handleLogin = async () => {
       password: password.value
     });
     
-    // Redirect to dashboard after successful login
-    router.push('/');
+    // Small delay to ensure localStorage is updated
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Redirect to the original destination or dashboard after successful login
+    const redirectPath = route.query.redirect || '/dashboard';
+    router.push(redirectPath);
   } catch (err) {
     // Error is already handled by useAuth composable
     console.error('Login failed:', err);
