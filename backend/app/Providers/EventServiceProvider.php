@@ -18,6 +18,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        \App\Events\AttendanceRecorded::class => [
+            \App\Listeners\LogAttendanceActivity::class,
+            \App\Listeners\InvalidateAttendanceCache::class,
+        ],
     ];
 
     /**

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Attendance;
 use App\Models\Student;
 use App\Models\User;
+use App\Events\AttendanceRecorded;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -57,8 +58,8 @@ class AttendanceService
             
             DB::commit();
             
-            // Invalidate cache after successful recording
-            $this->invalidateStatisticsCache();
+            // Dispatch event after successful recording
+            event(new AttendanceRecorded($recorded, $user));
             
             return $recorded;
         } catch (\Exception $e) {
