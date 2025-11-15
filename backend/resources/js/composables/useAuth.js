@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue';
 import { authService } from '../services/authService';
-import { useRouter } from 'vue-router';
 
 const user = ref(authService.getUser());
 const isAuthenticated = ref(authService.isAuthenticated());
@@ -8,8 +7,6 @@ const loading = ref(false);
 const error = ref(null);
 
 export function useAuth() {
-    const router = useRouter();
-
     /**
      * Login user
      * @param {Object} credentials - { email, password }
@@ -39,7 +36,7 @@ export function useAuth() {
             await authService.logout();
             user.value = null;
             isAuthenticated.value = false;
-            router.push('/login');
+            // Router navigation should be handled by the component
         } catch (err) {
             error.value = err.response?.data?.message || 'Logout failed';
         } finally {

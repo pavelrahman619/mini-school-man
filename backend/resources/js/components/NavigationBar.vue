@@ -31,12 +31,15 @@
 
 <script setup>
 import { useAuth } from '../composables/useAuth';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const { user, isAuthenticated, logout, loading } = useAuth();
 
 const handleLogout = async () => {
   try {
     await logout();
+    router.push('/login');
   } catch (error) {
     console.error('Logout failed:', error);
   }
